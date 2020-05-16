@@ -19,10 +19,10 @@ def choice(prompt, choices=('y', 'n')):
 
     while True:
         choice = input(prompt).lower().strip()
-       
+       # terminate the program if the input is end
         if choice == 'end':
             raise SystemExit
-      
+      # triggers if the input has only one name
         elif ',' not in choice:
             if choice in choices:
                 break
@@ -55,7 +55,7 @@ def get_filters():
         day = choice("\nFor what weekday(s) do you want do filter bikeshare "
                      "data? Use commas to list the names.\n>", weekdays)
 
-        
+        # confirm the user input
         confirmation = choice("\nPlease confirm that you would like to apply "
                               "the following filter(s) to the bikeshare data."
                               "\n\n City(ies): {}\n Month(s): {}\n Weekday(s)"
@@ -76,6 +76,7 @@ def load_data(city, month, day):
     print("\nThe program is loading the data for the filters of your choice.")
     start_time = time.time()
 
+     # filter the data according to the selected city filters
     
     if isinstance(city, list):
         df = pd.concat(map(lambda city: pd.read_csv(CITY_DATA[city]), city),
@@ -96,7 +97,7 @@ def load_data(city, month, day):
     df['Weekday'] = df['Start Time'].dt.weekday_name
     df['Start Hour'] = df['Start Time'].dt.hour
 
-    
+    # filter the data according to month and weekday into two new DataFrames
     if isinstance(month, list):
         df = pd.concat(map(lambda month: df[df['Month'] ==
                            (months.index(month)+1)], month))
@@ -122,17 +123,17 @@ def time_stats(df):
           'travel...\n')
     start_time = time.time()
 
-    
+     # display the most common month
     most_common_month = df['Month'].mode()[0]
     print('For the selected filter, the month with the most travels is: ' +
           str(months[most_common_month-1]).title() + '.')
 
-   
+    # display the most common week
     most_common_day = df['Weekday'].mode()[0]
     print('For the selected filter, the most common day of the week is: ' +
           str(most_common_day) + '.')
 
-   
+    # display the most common start hour
     most_common_hour = df['Start Hour'].mode()[0]
     print('For the selected filter, the most common start hour is: ' +
           str(most_common_hour) + '.')
@@ -157,7 +158,8 @@ def station_stats(df):
     print("For the selected filters, the most common start end is: " +
           most_common_end_station)
 
-   
+   # display most frequent combination of start station and
+    # end station trip
     df['Start-End Combination'] = (df['Start Station'] + ' - ' +
                                    df['End Station'])
     most_common_start_end_combination = str(df['Start-End Combination']
